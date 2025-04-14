@@ -1,0 +1,19 @@
+{
+    "tools": [
+      {
+        "name": "sql_query",
+        "description": "SQL query handler",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string" },
+            "params": { "type": "object", "default": {} }
+          },
+          "required": ["query"]
+        },
+        "command": "python",
+        "args": ["/projects/sql_query_tool.py"]
+      }
+    ]
+  }
+  

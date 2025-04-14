@@ -1,0 +1,11 @@
+streamlit
+openai
+python-dotenv
+psycopg2-binary
+anyio
+typing-extensions
+mcp
+uvicorn
+streamlit-option-menu
+pandas
+openpyxl

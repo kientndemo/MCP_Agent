@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "llama_mcp_streamlit"
+version = "0.0.1"
+description = "This project is an interactive AI assistant built with Streamlit, Nvidia NIM's API (LLaMa 3.3:70b)/Ollama, and Model Control Protocol (MCP). It provides a conversational interface where you can interact with an LLM to execute real-time external tools via MCP, retrieve data, and perform actions seamlessly. The assistant supports custom model selection, API configuration, and tool integration, enhancing usability and real-time data processing capabilities while maintaining a user-friendly chat-based experience."
+authors = ["Nikunj2003 <njkhitha2003@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+openai = "^1.61.1"
+streamlit = "^1.42.0"
+mcp = "1.1.2"
+python-dotenv = "^1.0.1"
+psycopg2-binary = "^2.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
