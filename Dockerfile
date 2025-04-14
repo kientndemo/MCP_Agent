@@ -25,14 +25,20 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 # Set working directory
 WORKDIR /app
 
-# Copy project files
-COPY ./ ./
+# Copy only necessary files for dependency installation first to leverage Docker cache
+COPY pyproject.toml poetry.lock* ./
 
 # Cấu hình Poetry không tạo virtualenv
 RUN poetry config virtualenvs.create false
 
-# Install Python dependencies with Poetry (bao gồm cả psycopg2-binary nếu đã khai báo trong pyproject.toml)
+# Update the lock file if pyproject.toml changed
+RUN poetry lock
+
+# Install Python dependencies with Poetry
 RUN poetry install --no-root
+
+# Copy the rest of the project files
+COPY ./ ./
 
 # Expose the Streamlit default port
 EXPOSE 8501

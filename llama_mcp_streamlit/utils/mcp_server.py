@@ -2,33 +2,37 @@ import streamlit as st
 from mcp import StdioServerParameters
 from utils.sql_tool import sql_query_handler
 import os
+from dotenv import load_dotenv
 
-# Default DB parameters (can be overridden by session_state)
+# Load environment variables from .env file
+load_dotenv()
+
+# Default DB parameters (least priority)
 DEFAULT_DB_PARAMS = {
-    "host": "localhost",
+    "host": "localhost", # Default to container localhost
     "port": 5432,
     "database": "airpollution",
     "user": "postgres",
-    "password": "123456" # Consider storing sensitive info more securely
+    "password": "" # Default password should be empty or a placeholder
 }
 
 def get_server_params():
-    """Constructs StdioServerParameters based on Streamlit session state."""
-    # Get DB details from session_state, falling back to defaults
-    db_host = st.session_state.get('db_host', DEFAULT_DB_PARAMS['host'])
-    db_port = st.session_state.get('db_port', DEFAULT_DB_PARAMS['port'])
-    db_name = st.session_state.get('db_name', DEFAULT_DB_PARAMS['database'])
-    db_user = st.session_state.get('db_user', DEFAULT_DB_PARAMS['user'])
-    db_password = st.session_state.get('db_password', DEFAULT_DB_PARAMS['password'])
+    """Constructs StdioServerParameters based on environment variables, session state, or defaults."""
+    # Get DB details prioritizing Env -> Session State -> Defaults
+    db_host = os.environ.get('DB_HOST', st.session_state.get('db_host', DEFAULT_DB_PARAMS['host']))
+    db_port = os.environ.get('DB_PORT', st.session_state.get('db_port', DEFAULT_DB_PARAMS['port']))
+    db_name = os.environ.get('DB_NAME', st.session_state.get('db_name', DEFAULT_DB_PARAMS['database']))
+    db_user = os.environ.get('DB_USER', st.session_state.get('db_user', DEFAULT_DB_PARAMS['user']))
+    db_password = os.environ.get('DB_PASSWORD', st.session_state.get('db_password', DEFAULT_DB_PARAMS['password']))
 
     # Construct the database connection URL
     db_url = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 
-    # Return npx server parameters using the dynamic db_url
+    # Ensure npx command exists and is executable if needed, or adjust path
+    npx_command = "npx" # Consider adding logic to find npx path if necessary
+
     return StdioServerParameters(
-        command="npx",
-        # Consider making the npx path configurable or detecting it
-        # command="/opt/homebrew/bin/npx",
+        command=npx_command,
         args=[
             "-y",
             "@modelcontextprotocol/server-postgres",
